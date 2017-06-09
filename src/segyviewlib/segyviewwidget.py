@@ -1,7 +1,28 @@
-from PyQt4.QtGui import QFileDialog, QToolButton, QToolBar, QVBoxLayout, QWidget
-
+from PyQt4.QtGui import QFileDialog, QToolButton, QToolBar, QVBoxLayout, QWidget, QLabel, QDialog
+from PyQt4.Qt import Qt
 from segyviewlib import ColormapCombo, LayoutCombo, SettingsWindow, SliceViewContext
-from segyviewlib import SliceDataSource, SliceModel, SliceDirection as SD, SliceViewWidget, resource_icon
+from segyviewlib import SliceDataSource, SliceModel, SliceDirection as SD, SliceViewWidget, resource_icon, resource_text
+
+
+class HelpDialog(QDialog):
+    def __init__(self, parent=None):
+        super(HelpDialog, self).__init__(parent=parent)
+
+        self.setWindowTitle("Help")
+
+        content = QLabel()
+        content.setText(resource_text("help_dialog_text"))
+
+        l = QVBoxLayout()
+        l.addWidget(content)
+
+        self.setLayout(l)
+        self.setWindowModality(Qt.ApplicationModal)
+
+        self.exec_()
+
+    def mousePressEvent(self, evt):
+        self.close()
 
 
 class SegyViewWidget(QWidget):
@@ -64,6 +85,11 @@ class SegyViewWidget(QWidget):
         self._settings_button.setCheckable(True)
         self._settings_button.toggled.connect(self._show_settings)
         toolbar.addWidget(self._settings_button)
+
+        help_btn = QToolButton()
+        help_btn.setIcon(resource_icon('help.png'))
+        help_btn.clicked.connect(lambda: HelpDialog(self))
+        toolbar.addWidget(help_btn)
 
         def toggle_on_close(event):
             self._settings_button.setChecked(False)

@@ -13,6 +13,7 @@ set(RESOURCES
     layouts_two_horizontal_grid.png
     layouts_two_vertical_grid.png
     table_export.png
+    help.png
 )
 
 add_custom_target(install_resources ALL)
